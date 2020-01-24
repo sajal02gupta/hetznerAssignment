@@ -1,13 +1,8 @@
 package com.hetzner.demo.repo;
 
 import java.util.Collections;
-import java.util.List;
-import java.lang.String;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -16,13 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 
 import com.google.inject.Inject;
-import com.hetzner.demo.model.ServerRequest;
-import com.hetzner.demo.model.ServerResponse;
+import com.hetzner.demo.model.Volume;
+import com.hetzner.demo.model.VolumeResponse;
 
-@Repository
-@PropertySource("classpath:global.properties")
-public class CreateServerDALImp implements CreateServerDAL{
-	
+@Repository("VolumeDAL")
+public class VolumeDALImp implements VolumeDAL{
 	@Inject
 	private RestTemplate resttemplate;
 	
@@ -31,30 +24,24 @@ public class CreateServerDALImp implements CreateServerDAL{
 	private HttpHeaders httpHeaders;
 	private static String url = "https://api.hetzner.cloud/v1";
 	
-	public CreateServerDALImp(@Value("${api.token}") String token) {
-        this.token = token;
+
+	public VolumeDALImp(@Value("${api.token}") String token) {
+		super();
+		this.token = token;
 
         this.httpHeaders = new HttpHeaders();
         this.httpHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         this.httpHeaders.add("Authorization", "Bearer " + token);
         this.entity = new HttpEntity<>("parameters", httpHeaders);
         resttemplate = new RestTemplate();
-    }
-	@Override
-	public ServerResponse create(@RequestBody ServerRequest c) {
-		// TODO Auto-generated method stub
-		return resttemplate.postForEntity(url+"/servers",new HttpEntity<>(c, httpHeaders), ServerResponse.class).getBody();
-	}
-	@Override
-	public List<ServerRequest> getAllServer() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	@Override
-	public Boolean Delete(ServerRequest c) {
-		// TODO Auto-generated method stub
-		return null;
+		// TODO Auto-generated constructor stub
 	}
 
+	@Override
+	public VolumeResponse createVolume(@RequestBody Volume v) {
+		// TODO Auto-generated method stub
+		return resttemplate.postForEntity(url+"/volumes",new HttpEntity<>(v, httpHeaders), VolumeResponse.class).getBody();
+	}
+	
 
 }
